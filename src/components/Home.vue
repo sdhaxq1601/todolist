@@ -7,25 +7,20 @@
             <li v-for="(list,index) in lists" :key="index">{{list.title}}</li>
         </ul>
     </div> -->
-    <co-a v-for="(list,index) in lists" :key="index" :list="list" :index="index" @delete="lists.splice($event,1)"></co-a>
-    <input type="button" value="clear" @click="lists=[]">
+    <ATodo v-for="(list,index) in lists" :key="index" :todo="list" :index="index" @delete="lists.splice($event,1)"></ATodo>
+    <input type="button" value="clear" v-show="lists.length!=0" @click="lists=[]">
 </div>
 </template>
 <script>
-let coA={
-    data(){
-        return{}
-    },
-     props:[
-      'list',
-      'index'
-  ],
-    template:`<div><span>{{list.title+''+index}}</span><button @click="$emit('delete',index)">cancel</button></div>`
-}
+import ATodo from "./ATodo";
+import ADone from "./ADone";
+
 export default {
-  name: "Home",
-  components:{"co-a":coA},
- 
+  name: "Home", 
+  components:{
+      ATodo,
+      ADone
+  },
   data() {
     return {
       lists: []
