@@ -1,22 +1,22 @@
 <template>
     <div>
-        <input type="checkbox" name="" id="">
+        <input type="checkbox" v-model="todo.done" v-on:change="$emit('gl',index)">
         <span>{{todo.title}}</span>
-        <button v-on:click="$emit('delete',index)">Cancel</button>
+        <button v-on:click="$emit('delete',index)">X</button>
         <div style="clear:both;"></div>
     </div>
 </template>
 <script>
 export default {
-  name: "ATodo",
-  props: ["todo", "index"],
-  data() {
-    return {};
+  name: 'ATodo',
+  props: ['todo', 'index'],
+  data () {
+    return {}
   },
   methods: {},
   computed: {},
   watch: {}
-};
+}
 </script>
 <style scoped>
 div {
@@ -37,4 +37,3 @@ button {
   float: right;
 }
 </style>
-
