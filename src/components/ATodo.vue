@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div draggable="true" @dragover="allowDrag">
         <input type="checkbox" v-model="todo.done" v-on:change="$emit('gl',index)">
         <span>{{todo.title}}</span>
         <button v-on:click="$emit('delete',index)">X</button>
@@ -13,7 +13,12 @@ export default {
   data () {
     return {}
   },
-  methods: {},
+  methods: {
+    allowDrag (ev) {
+      ev.preventDefault()
+      // console.log(ev)
+    }
+  },
   computed: {},
   watch: {}
 }

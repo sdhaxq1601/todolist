@@ -8,7 +8,13 @@
         </ul>
     </div> -->
     <p>正在进行...{{lists.filter(i=>!i.done).length}}</p>
-    <ATodo v-for="(list,index) in lists" :key="'a'+index" :todo="list" :index="index" v-show="!list.done" @delete="lists.splice($event,1)"></ATodo>
+    <ATodo
+      v-for="(list,index) in lists"
+      :key="'a'+index" :todo="list"
+      :index="index"
+      v-show="!list.done"
+      @delete="lists.splice($event,1)"
+      @dragover="allowDrag"></ATodo>
     <p>已经完成！{{lists.filter(i=>i.done).length}}</p>
     <ATodo v-for="(list,index) in lists" :key="'b'+index" :todo="list" :index="index" v-show="list.done" @delete="lists.splice($event,1)" @gl="splicePush($event)"></ATodo>
     <input type="button" value="clear" v-show="lists.length!=0" @click="lists=[]">
@@ -41,6 +47,10 @@ export default {
       this.lists.unshift(list)
       e.target.value = ''
       // console.log(this.lists);
+    },
+    allowDrag (ev) {
+      // ev.preventDefault()
+      console.log('dragOver!')
     },
     splicePush: function (i) {
       const c = this.lists.splice(i, 1)
