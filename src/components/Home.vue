@@ -14,7 +14,7 @@
       :index="index"
       v-show="!list.done"
       @delete="lists.splice($event,1)"
-      @dragover="allowDrag"></ATodo>
+      @myDragover="allowDrag"></ATodo>
     <p>已经完成！{{lists.filter(i=>i.done).length}}</p>
     <ATodo v-for="(list,index) in lists" :key="'b'+index" :todo="list" :index="index" v-show="list.done" @delete="lists.splice($event,1)" @gl="splicePush($event)"></ATodo>
     <input type="button" value="clear" v-show="lists.length!=0" @click="lists=[]">
@@ -50,7 +50,10 @@ export default {
     },
     allowDrag (ev) {
       // ev.preventDefault()
-      console.log('dragOver!')
+      // console.log(ev)
+      if (this.lists.length > 5) {
+        this.lists.pop()
+      }
     },
     splicePush: function (i) {
       const c = this.lists.splice(i, 1)

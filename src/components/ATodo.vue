@@ -1,5 +1,5 @@
 <template>
-    <div draggable="true" @dragover="allowDrag">
+    <div class="a-todo" draggable="true" @dragover="allowDrag">
         <input type="checkbox" v-model="todo.done" v-on:change="$emit('gl',index)">
         <span>{{todo.title}}</span>
         <button v-on:click="$emit('delete',index)">X</button>
@@ -17,6 +17,7 @@ export default {
     allowDrag (ev) {
       ev.preventDefault()
       // console.log(ev)
+      return this.$emit('myDragover', ev)
     }
   },
   computed: {},
@@ -24,8 +25,10 @@ export default {
 }
 </script>
 <style scoped>
-div {
+.a-todo {
   width: 60%;
+  border: 1px solid #666;
+  margin-bottom: 5px;
 }
 span {
   width: 75%;
@@ -35,6 +38,7 @@ span {
 }
 input {
   width:5%;
+  height: 15px;
   float:left;
 }
 button {
