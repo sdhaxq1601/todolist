@@ -7,7 +7,7 @@
             <li v-for="(list,index) in lists" :key="index">{{list.title}}</li>
         </ul>
     </div> -->
-    <p>正在进行...<span class='bold'>{{lists.filter(i=>i.done).length}}</span></p>
+    <p>正在进行...<span class='bold'>{{lists.filter(i=>!i.done).length}}</span></p>
     <ATodo
       v-for="(list,index) in lists"
       :key="'a'+index" :todo="list"
