@@ -7,15 +7,15 @@
             <li v-for="(list,index) in lists" :key="index">{{list.title}}</li>
         </ul>
     </div> -->
-    <p>正在进行...{{lists.filter(i=>!i.done).length}}</p>
+    <p>正在进行...<span class='bold'>{{lists.filter(i=>i.done).length}}</span></p>
     <ATodo
       v-for="(list,index) in lists"
       :key="'a'+index" :todo="list"
       :index="index"
       v-show="!list.done"
       @delete="lists.splice($event,1)"
-      @myDragover="allowDrag"></ATodo>
-    <p>已经完成！{{lists.filter(i=>i.done).length}}</p>
+      @willDragOrder="dragOrder"></ATodo>
+    <p>已经完成！<span class='bold'>{{lists.filter(i=>i.done).length}}</span></p>
     <ATodo v-for="(list,index) in lists" :key="'b'+index" :todo="list" :index="index" v-show="list.done" @delete="lists.splice($event,1)" @gl="splicePush($event)"></ATodo>
     <input type="button" value="clear" v-show="lists.length!=0" @click="lists=[]">
     <div>{{test}}</div>
@@ -39,7 +39,7 @@ export default {
     }
   },
   methods: {
-    handler: function (e) {
+    handler (e) {
       const list = {
         done: false,
         title: e.target.value
@@ -55,9 +55,19 @@ export default {
         this.lists.pop()
       }
     },
-    splicePush: function (i) {
+    splicePush (i) {
       const c = this.lists.splice(i, 1)
       this.lists.push(c[0])
+    },
+    dragOrder (e) {
+      const [o, d] = e
+      if (o === d) {
+        return
+      }
+      const c = this.lists.splice(o, 1)
+      const r = this.lists.splice(d)
+      const f = this.lists
+      this.lists = [...f, ...c, ...r]
     }
   },
   computed: {
@@ -69,7 +79,7 @@ export default {
 }
 </script>
 <style>
-input{
-    width:20vw;
+.bold{
+  font-weight: bold
 }
 </style>
