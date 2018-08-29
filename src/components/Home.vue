@@ -14,24 +14,32 @@
       :index="index"
       v-show="!list.done"
       @delete="lists.splice($event,1)"
-      @willDragOrder="dragOrder"></ATodo>
+      @willDragOrder="dragOrder"
+      @touchMoveOrder="touchMoveOrder"></ATodo>
     </div>
     <p>已经完成！<span class='bold'>{{lists.filter(i=>i.done).length}}</span></p>
-    <ATodo v-for="(list,index) in lists" :key="'b'+index" :todo="list" :index="index" v-show="list.done" @delete="lists.splice($event,1)" @gl="splicePush($event)"></ATodo>
+    <ATodo v-for="(list,index) in lists"
+      :key="'b'+index"
+      :todo="list"
+      :index="index"
+      v-show="list.done"
+      @delete="lists.splice($event,1)"
+      @gl="splicePush($event)"></ATodo>
     <input type="button" value="clear" v-show="lists.length!=0" @click="lists=[]">
     <div>{{test}}</div>
+    <FixedBox></FixedBox>
 </div>
 </template>
 <script>
 // ++
 import ATodo from './ATodo'
-import ADone from './ADone'
+import FixedBox from './FixedBox'
 
 export default {
   name: 'Home',
   components: {
     ATodo,
-    ADone
+    FixedBox
   },
   data () {
     return {
@@ -69,6 +77,20 @@ export default {
       const r = this.lists.splice(d)
       const f = this.lists
       this.lists = [...f, ...c, ...r]
+    },
+    touchMoveOrder (d) {
+      const h = this.$el.querySelectorAll('.container')[0].offsetHeight
+      const todos = this.lists.filter(i => !i.done).length
+      const v = Math.round(d[0] / h * todos)
+      console.log(v)
+      if (!v) {
+        return
+      }
+      const o = d[1]
+      let dst = o + v
+      if (v > 0) {
+        this.lists.slice(o).reduce()
+      }
     }
   },
   computed: {

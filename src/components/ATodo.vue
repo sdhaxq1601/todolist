@@ -4,7 +4,10 @@
       draggable="true"
       @dragstart="dragStart"
       @drop="drop"
-      @dragover="allowDrag">
+      @dragover="allowDrag"
+      @touchstart="tStart"
+      @touchmove="tMove"
+      @touchend="tEnd">
         <input class="checkbox" type="checkbox" v-model="todo.done" v-on:change="$emit('gl',index)">
         <span v-show="!edit" v-on:click="canEdit">{{todo.title}}</span>
         <input class="inp" v-show="edit" v-on:keyup.enter="edit=false" v-on:blur="edit=false" type="text" v-model="todo.title">
@@ -17,7 +20,11 @@ export default {
   name: 'ATodo',
   props: ['todo', 'index'],
   data () {
-    return {'edit': false}
+    return {
+      'edit': false,
+      'start': 0,
+      'end': 0
+    }
   },
   methods: {
     dragStart (ev) {
@@ -35,6 +42,9 @@ export default {
       this.$emit('willDragOrder', [data, this.index])
     },
     canEdit (ev) {
+      if (this.todo.done) {
+        return
+      }
       this.edit = true
       let el = this.$el
       setTimeout(function () {
@@ -42,6 +52,19 @@ export default {
       },
       10
       )
+    },
+    tStart (e) {
+      e.preventDefault()
+      this.start = e.touches[0].clientY
+    },
+    tMove (e) {
+      e.preventDefault()
+      this.end = e.touches[0].clientY
+    },
+    tEnd (e) {
+      console.log('tEnd', this.end - this.start)
+      this.$emit('touchMoveOrder', [this.end - this.start, this.index])
+      this.end = this.start = 0
     }
   },
   computed: {},
