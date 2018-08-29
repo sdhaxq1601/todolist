@@ -8,13 +8,14 @@
         </ul>
     </div> -->
     <p>正在进行...<span class='bold'>{{lists.filter(i=>!i.done).length}}</span></p>
-    <ATodo
+    <div class="container"><ATodo
       v-for="(list,index) in lists"
       :key="'a'+index" :todo="list"
       :index="index"
       v-show="!list.done"
       @delete="lists.splice($event,1)"
       @willDragOrder="dragOrder"></ATodo>
+    </div>
     <p>已经完成！<span class='bold'>{{lists.filter(i=>i.done).length}}</span></p>
     <ATodo v-for="(list,index) in lists" :key="'b'+index" :todo="list" :index="index" v-show="list.done" @delete="lists.splice($event,1)" @gl="splicePush($event)"></ATodo>
     <input type="button" value="clear" v-show="lists.length!=0" @click="lists=[]">
@@ -34,7 +35,7 @@ export default {
   },
   data () {
     return {
-      lists: [],
+      lists: JSON.parse(window.localStorage.getItem('todolist')) || [],
       test: ''
     }
   },
@@ -74,7 +75,11 @@ export default {
 
   },
   watch: {
-
+    lists: {handler (v) {
+      window.localStorage.setItem('todolist', JSON.stringify(v))
+    },
+    deep: true
+    }
   }
 }
 </script>

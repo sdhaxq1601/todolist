@@ -5,8 +5,9 @@
       @dragstart="dragStart"
       @drop="drop"
       @dragover="allowDrag">
-        <input type="checkbox" v-model="todo.done" v-on:change="$emit('gl',index)">
-        <span>{{todo.title}}</span>
+        <input class="checkbox" type="checkbox" v-model="todo.done" v-on:change="$emit('gl',index)">
+        <span v-show="!edit" v-on:click="canEdit">{{todo.title}}</span>
+        <input class="inp" v-show="edit" v-on:keyup.enter="edit=false" v-on:blur="edit=false" type="text" v-model="todo.title">
         <button v-on:click="$emit('delete',index)">X</button>
         <div style="clear:both;"></div>
     </div>
@@ -16,7 +17,7 @@ export default {
   name: 'ATodo',
   props: ['todo', 'index'],
   data () {
-    return {}
+    return {'edit': false}
   },
   methods: {
     dragStart (ev) {
@@ -32,10 +33,21 @@ export default {
       ev.preventDefault()
       const data = ev.dataTransfer.getData('index')
       this.$emit('willDragOrder', [data, this.index])
+    },
+    canEdit (ev) {
+      this.edit = true
+      let el = this.$el
+      setTimeout(function () {
+        el.querySelector('.inp').focus()
+      },
+      10
+      )
     }
   },
   computed: {},
-  watch: {}
+  watch: {
+
+  }
 }
 </script>
 <style scoped>
@@ -52,9 +64,14 @@ span {
   text-align: start;
   float:left;
 }
-input {
+.checkbox {
   width:5%;
   height: 15px;
+  float:left;
+}
+.inp {
+  width: 75%;
+  text-align: start;
   float:left;
 }
 button {
