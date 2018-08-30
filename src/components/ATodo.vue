@@ -54,11 +54,12 @@ export default {
       )
     },
     tStart (e) {
-      e.preventDefault()
+      // e.preventDefault()
       this.start = e.touches[0].clientY
+      this.end = e.touches[0].clientY
     },
     tMove (e) {
-      e.preventDefault()
+      // e.preventDefault()
       this.end = e.touches[0].clientY
     },
     tEnd (e) {
@@ -75,7 +76,7 @@ export default {
 </script>
 <style scoped>
 .a-todo {
-  width: 60%;
+  width: 100%;
   border: 1px solid #666;
   margin-bottom: 5px;
   margin-left: auto;

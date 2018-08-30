@@ -8,7 +8,7 @@
         </ul>
     </div> -->
     <p>正在进行...<span class='bold'>{{lists.filter(i=>!i.done).length}}</span></p>
-    <div class="container"><ATodo
+    <div class="container" @touchmove="preventDefault"><ATodo
       v-for="(list,index) in lists"
       :key="'a'+index" :todo="list"
       :index="index"
@@ -87,10 +87,29 @@ export default {
         return
       }
       const o = d[1]
-      let dst = o + v
+      let dst = 0
       if (v > 0) {
-        this.lists.slice(o).reduce()
+        dst = o + this.func(this.lists.slice(o), {done: false}, v).i + 1
+      } else {
+        dst = o - this.func(this.lists.slice(0, o).reverse(), {done: false}, -v).i - 1
       }
+      console.log(o, dst)
+      this.dragOrder ([o, dst])
+    },
+    func (arr, des, count) {
+      return (
+        arr.reduce (
+          (a, b, c) => a.c == 0 ?
+            a: ((des == b) || (typeof(des) == "object" ?
+              Object.keys(des).reduce( (j, k, l) => j ?
+                b[k] == des[k] : j,true) : false)) ?
+                  {c : a.c-1, i : c} : {c : a.c, i : c}
+            ,{c:count, i : 0}
+          )
+      )
+    },
+    preventDefault (e) {
+      e.preventDefault()
     }
   },
   computed: {
@@ -108,5 +127,9 @@ export default {
 <style>
 .bold{
   font-weight: bold
+}
+.container{
+  width:60%;
+  margin:auto;
 }
 </style>
