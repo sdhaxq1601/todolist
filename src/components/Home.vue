@@ -94,18 +94,18 @@ export default {
         dst = o - this.func(this.lists.slice(0, o).reverse(), {done: false}, -v).i - 1
       }
       console.log(o, dst)
-      this.dragOrder ([o, dst])
+      this.dragOrder([o, dst])
     },
     func (arr, des, count) {
       return (
-        arr.reduce (
-          (a, b, c) => a.c == 0 ?
-            a: ((des == b) || (typeof(des) == "object" ?
-              Object.keys(des).reduce( (j, k, l) => j ?
-                b[k] == des[k] : j,true) : false)) ?
-                  {c : a.c-1, i : c} : {c : a.c, i : c}
-            ,{c:count, i : 0}
-          )
+        arr.reduce(
+          (a, b, c) => a.c === 0
+            ? a : ((des === b) || (typeof (des) === 'object'
+              ? Object.keys(des).reduce((j, k, l) => j
+                ? b[k] === des[k] : j, true) : false))
+              ? {c: a.c - 1, i: c} : {c: a.c, i: c}
+          , {c: count, i: 0}
+        )
       )
     },
     preventDefault (e) {
