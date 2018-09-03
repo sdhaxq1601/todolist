@@ -15,7 +15,7 @@ export default {
   data () {
     return {
       id: "fix",
-      points: [],
+      points: new Array(5).fill(null),
       left: 100,
       top: 100,
       x: 0,
@@ -46,18 +46,24 @@ export default {
       this.x = point.x = e.touches[0].screenX
       this.y = point.y = e.touches[0].screenY
       point.time = e.timeStamp
+      this.points.shift()
       this.points.push(point)
     },
     slide (e) {
       const startSlideTime = new Date().getTime()
       let totalSlideTime=0 // ms
-      const dt = (startSlideTime - this.ot) / 1000
-      const dx = this.x - this.ox
-      const dy = this.y - this.oy
+      if (this.points[0]===null) {return}
+      // const dt = (startSlideTime - this.ot) / 1000
+      const dt = (this.points[4].time - this.points[0].time) / 1000
+      // const dy = this.y - this.oy
+      // const dx = this.x - this.ox
+      const dy = this.points[4].y - this.points[0].y
+      const dx = this.points[4].x - this.points[0].x
+      console.log(this.points,dt,dy,dx)
       this.ox = this.x
       this.oy = this.y
       const dd = Math.sqrt(dx*dx+dy*dy)
-      let g = -100 // 加速度
+      let g = -800 // 加速度
       let gx = dx / dd * g // x加速度
       let gy = dy / dd * g // y加速度
       let sx = dx / dt
@@ -71,7 +77,7 @@ export default {
       const h=this.$el.querySelector('#' + that.id).clientHeight
       const w=that.$el.querySelector('#' + that.id).clientWidth
       console.log(dx, dy, sx, sy)
-      if (dt > 0.1 && (dx || dy)) {
+      if (dt > 0.01 && (dx || dy)) {
       const Iid=setInterval(function(){
         // console.log("interval",totalSlideTime,duraTime)
         if (totalSlideTime >= duraTime) {
