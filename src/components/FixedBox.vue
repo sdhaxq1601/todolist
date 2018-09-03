@@ -60,7 +60,8 @@ export default {
       let sy = dy / dt
       let ix = 1
       let iy = 1
-      const duraTime = (0 - sx) / gx * 1000 //
+      const duraTime = (((0 - sx) / gx) || ((0 - sy) / gy)) * 1000 //
+      console.log(duraTime)
       const that = this
       const time = 1 / 60
       const h=this.$el.querySelector('#' + that.id).clientHeight
@@ -68,7 +69,7 @@ export default {
       console.log(dx, dy, sx, sy)
       if (dt > 0.1 && (dx || dy)) {
       const Iid=setInterval(function(){
-        console.log("interval",totalSlideTime,duraTime)
+        // console.log("interval",totalSlideTime,duraTime)
         if (totalSlideTime >= duraTime) {
           clearInterval(Iid)
           return
