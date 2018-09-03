@@ -14,7 +14,8 @@ export default {
   name: 'FixedBox',
   data () {
     return {
-      id:"fix",
+      id: "fix",
+      points: [],
       left: 100,
       top: 100,
       x: 0,
@@ -41,8 +42,11 @@ export default {
       e.preventDefault()
       this.top += e.touches[0].screenY - this.y
       this.left += e.touches[0].screenX - this.x
-      this.x = e.touches[0].screenX
-      this.y = e.touches[0].screenY
+      let point = {}
+      this.x = point.x = e.touches[0].screenX
+      this.y = point.y = e.touches[0].screenY
+      point.time = e.timeStamp
+      this.points.push(point)
     },
     slide (e) {
       const startSlideTime = new Date().getTime()
