@@ -6,7 +6,9 @@
           v-on:touchstart="dosth"
           v-on:touchmove="move"
           v-on:touchend="slide"
-          ></div>
+          >
+          <svg width="100%" height="100%"><circle cx="50%" cy="50%" r="50%" stroke="black" stroke-width="0" fill="red"></circle></svg>
+          </div>
     </div>
 </template>
 <script>
@@ -27,9 +29,7 @@ export default {
   },
   computed: {
     css () {
-      return `background:#f9e;width:10vw;height:10vw;position:fixed;top:${this.top}px;left:${
-        this.left
-      }px;`
+      return `width:10vw;height:10vw;position:fixed;top:${this.top}px;left:${this.left}px;`
     }
   },
   methods: {
@@ -43,9 +43,9 @@ export default {
       this.top += e.touches[0].screenY - this.y
       this.left += e.touches[0].screenX - this.x
       let point = {}
-      this.x = point.x = e.touches[0].screenX
-      this.y = point.y = e.touches[0].screenY
-      point.time = e.timeStamp
+      this.x = point['x'] = e.touches[0].screenX
+      this.y = point['y']  = e.touches[0].screenY
+      point['time']  = e.timeStamp
       this.points.shift()
       this.points.push(point)
     },
@@ -59,7 +59,7 @@ export default {
       // const dx = this.x - this.ox
       const dy = this.points[4].y - this.points[0].y
       const dx = this.points[4].x - this.points[0].x
-      console.log(this.points,dt,dy,dx)
+      console.log(this.points.map(i=>i.x),dt,dy,dx)
       this.ox = this.x
       this.oy = this.y
       const dd = Math.sqrt(dx*dx+dy*dy)
@@ -72,10 +72,16 @@ export default {
       let iy = 1
       const duraTime = (((0 - sx) / gx) || ((0 - sy) / gy)) * 1000 //
       console.log(duraTime)
-      const that = this
+      const h=this.$el.querySelector('#' + this.id).clientHeight
+      const w=this.$el.querySelector('#' + this.id).clientWidth
+      const tempTop = this.top
+      const tempLeft = this.left
+      this.top = this.top >= 0?(this.top+h)>window.innerHeight?window.innerHeight-h:this.top:0
+      this.left = this.left >= 0?(this.left+w)>window.innerWidth?window.innerWidth-w:this.left:0
+      if (this.top !== tempTop) { iy=-iy }
+      if (this.left !== tempLeft) { ix=-ix }
       const time = 1 / 60
-      const h=this.$el.querySelector('#' + that.id).clientHeight
-      const w=that.$el.querySelector('#' + that.id).clientWidth
+      const that = this
       console.log(dx, dy, sx, sy)
       if (dt > 0.01 && (dx || dy)) {
       const Iid=setInterval(function(){
@@ -85,17 +91,18 @@ export default {
           return
           }
         // console.log(that.top,that.left,gy,gx)
+        if(totalSlideTime===0){console.log(that.left,that.top)}
         totalSlideTime += time * 1000
         that.x = (sx * time + gx * time * time / 2) * ix
         that.y = (sy * time + gy * time * time / 2) * iy
         that.left += that.x
         that.top += that.y
-        if(that.top<=0 ||
-        that.top + h>=window.innerHeight){
+        if((that.top<=0?(that.top=0) || true:false) ||
+        ((that.top + h>=window.innerHeight)?(that.top=window.innerHeight-w)||true:false)){
           iy=-iy
         }
-        if(that.left<=0 ||
-        that.left + w>=window.innerWidth){
+        if((that.left<=0?(that.left=0) || true:false) ||
+        ((that.left + w>=window.innerWidth)?(that.left=window.innerWidth-w)||true:false)){
           ix=-ix
         }
         sx = gx * time + sx
